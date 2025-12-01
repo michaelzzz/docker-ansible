@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  ansible:
+    build:
+      context: .
+      dockerfile: Dockerfile.ansible
+    container_name: ansible-controller
+    volumes:
+      - ./ansible:/ansible
+    networks:
+      labnet:
+    command: tail -f /dev/null
+
+  ubuntu1:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu
+    container_name: ubuntu-host-1
+    networks:
+      labnet:
+    ports:
+      - "2201:22"
+
+  ubuntu2:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu
+    container_name: ubuntu-host-2
+    networks:
+      labnet:
+    ports:
+      - "2202:22"
+
+networks:
+  labnet:
+    driver: bridge
