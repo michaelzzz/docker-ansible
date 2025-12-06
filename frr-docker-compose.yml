@@ -1,0 +1,64 @@
+services:
+  routerA:
+    image: frrouting/frr:latest
+    platform: linux/amd64
+    container_name: routerA
+    hostname: routerA
+    networks:
+      netAB:
+        ipv4_address: 172.30.1.2
+      netAC:
+        ipv4_address: 172.30.2.2
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./routerA/frr.conf:/etc/frr/frr.conf
+
+  routerB:
+    image: frrouting/frr:latest
+    platform: linux/amd64
+    container_name: routerB
+    hostname: routerB
+    networks:
+      netAB:
+        ipv4_address: 172.30.1.3
+      netBC:
+        ipv4_address: 172.30.3.2
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./routerB/frr.conf:/etc/frr/frr.conf
+
+  routerC:
+    image: frrouting/frr:latest
+    platform: linux/amd64
+    container_name: routerC
+    hostname: routerC
+    networks:
+      netAC:
+        ipv4_address: 172.30.2.3
+      netBC:
+        ipv4_address: 172.30.3.3
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./routerC/frr.conf:/etc/frr/frr.conf
+
+networks:
+  netAB:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.1.0/24
+
+  netAC:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.2.0/24
+
+  netBC:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.3.0/24
